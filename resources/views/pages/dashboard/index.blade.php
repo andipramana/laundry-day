@@ -17,5 +17,5 @@
 
 @section('footerscript')
     <script src="{{ asset('template/plugins/chart.js/Chart.min.js') }}"></script>
-    <script src="{{ asset('template/dist/js/pages/dashboard3.js') }}"></script>
+    <script src="{{ asset('template/dist/js/pages/dashboard.js') }}"></script>
 @endsection
