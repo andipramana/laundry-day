@@ -18,7 +18,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="/" class="nav-link">
+                    <a href="/" class="nav-link {{ !Route::currentRouteNamed('employees*') && !Route::currentRouteNamed('orders*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Dashboard
@@ -26,7 +26,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/employees" class="nav-link">
+                    <a href="/employees" class="nav-link {{ Route::currentRouteNamed('employees*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-user"></i>
                         <p>
                             Employees
@@ -34,7 +34,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/orders" class="nav-link">
+                    <a href="/orders" class="nav-link {{ Route::currentRouteNamed('orders*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-book"></i>
                         <p>
                             Orders
