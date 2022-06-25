@@ -17,12 +17,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/employees', [EmployeeController::class, 'showSearch'])->name('employees');
 
-Route::get('/employees/register', [EmployeeController::class, 'showRegister'])->name('employees');
+Route::get('/employees/register', [EmployeeController::class, 'showRegister'])->name('employeesShowRegister');
 
-Route::post('/employees/register', [EmployeeController::class, 'register'])->name('employees');
+Route::post('/employees/register', [EmployeeController::class, 'register'])->name('employeesRegister');
 
 Route::get('/orders', [OrderController::class, 'showSearch'])->name('orders');
 
-Route::get('/orders/register', [OrderController::class, 'showRegister'])->name('orders');
+Route::get('/orders/register', [OrderController::class, 'showRegister'])->name('ordersShowRegister');
 
-Route::post('/orders/register', [OrderController::class, 'register'])->name('orders');
+Route::post('/orders/register', [OrderController::class, 'register'])->name('ordersRegister');

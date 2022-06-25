@@ -7,13 +7,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link {{ Route::currentRouteNamed('dashboard') ? 'active' : '' }}" aria-current="page" href="/employees">Dashboard</a>
+                    <a class="nav-link {{ Route::currentRouteNamed('dashboard*') ? 'active' : '' }}" aria-current="page" href="/employees">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Route::currentRouteNamed('employees') ? 'active' : '' }}" href="/employees">Employees</a>
+                    <a class="nav-link {{ Route::currentRouteNamed('employees*') ? 'active' : '' }}" href="/employees">Employees</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Route::currentRouteNamed('orders') ? 'active' : '' }}" href="/orders">Orders</a>
+                    <a class="nav-link {{ Route::currentRouteNamed('orders*') ? 'active' : '' }}" href="/orders">Orders</a>
                 </li>
             </ul>
         </div>
