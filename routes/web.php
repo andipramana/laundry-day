@@ -26,3 +26,5 @@ Route::get('/orders', [OrderController::class, 'showSearch'])->name('orders');
 Route::get('/orders/register', [OrderController::class, 'showRegister'])->name('ordersShowRegister');
 
 Route::post('/orders/register', [OrderController::class, 'register'])->name('ordersRegister');
+
+Route::get('/orders/process', [OrderController::class, 'process'])->name('ordersProcess');

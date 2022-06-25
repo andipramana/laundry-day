@@ -26,6 +26,7 @@
                     <th scope="col">Customer Gender</th>
                     <th scope="col">Customer Phone No.</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,6 +40,17 @@
                         <th>{{ $row->customer_gender }}</th>
                         <th>{{ $row->customer_phone_no }}</th>
                         <th>{{ $row->status }}</th>
+                        <th>
+                            @if ($row->status == 'Registered')
+                                <a href="/orders/process?code={{ $row->order_code }}&status=Washed" class="btn btn-warning">Wash</a>
+                            @elseif ($row->status == 'Washed')
+                                <a href="/orders/process?code={{ $row->order_code }}&status=Dried" class="btn btn-primary">Drying</a>
+                            @elseif ($row->status == 'Dried')
+                                <a href="/orders/process?code={{ $row->order_code }}&status=Done" class="btn btn-success">Package</a>
+                            @else
+                                -
+                            @endif
+                        </th>
                     </tr>
                 @endforeach
             </tbody>

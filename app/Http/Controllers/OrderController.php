@@ -29,6 +29,12 @@ class OrderController extends Controller
         return redirect()->route('orders');
     }
 
+    public function process(Request $request) {
+        Order::where('order_code', $request->code)->update(['status' => $request->status]);
+
+        return redirect()->route('orders');
+    }
+
     private function generateOrderCode() {
         $order_code = '';
         $current_date = date('Ymd');
