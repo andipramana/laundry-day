@@ -1,4 +1,9 @@
 @extends('layouts.main')
+@section('headerscript')
+    <link rel="stylesheet" href="{{ asset('template/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('template/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('template/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+@endsection
 @section('title')
     Search Employee
 @endsection
@@ -15,25 +20,34 @@
         </div>
     </div>
     <div class="row">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Code</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Gender</th>
-                    <th scope="col">Phone No</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($data as $row)
-                    <tr>
-                        <th>{{ $row->name }}</th>
-                        <th>{{ $row->employee_code }}</th>
-                        <th>{{ $row->gender }}</th>
-                        <th>{{ $row->phone_no }}</th>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">List of Employee</h3>
+                </div>
+                <div class="card-body">
+                    <table id="example2" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Code</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">Phone No</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($data as $row)
+                                <tr>
+                                    <th>{{ $row->name }}</th>
+                                    <th>{{ $row->employee_code }}</th>
+                                    <th>{{ $row->gender }}</th>
+                                    <th>{{ $row->phone_no }}</th>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
