@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    private static $search_path = 'orders/search';
-    private static $register_form_path = 'orders/register';
+    private static $search_path = 'pages/orders/search';
+    private static $register_form_path = 'pages/orders/register';
 
     public function showSearch() {
         $data = Order::all();

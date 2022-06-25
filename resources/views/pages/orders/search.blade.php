@@ -53,7 +53,7 @@
                                     <th>{{ $row->customer_gender }}</th>
                                     <th>{{ $row->customer_phone_no }}</th>
                                     <th>{{ $row->cost }}</th>
-                                    <th><span class="right badge badge-@include('components.common.badgestatusorder')">{{ $row->status }}</span></th>
+                                    <th><span class="right badge badge-@include('pages.orders.components.badgestatusorder')">{{ $row->status }}</span></th>
                                     <th>
                                         @if ($row->status == 'Registered')
                                             <a href="/orders/process?code={{ $row->order_code }}&status=Washed" class="btn btn-warning">Wash</a>

@@ -6,8 +6,8 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller {
-    private static $search_path = 'employees/search';
-    private static $register_form_path = 'employees/register';
+    private static $search_path = 'pages/employees/search';
+    private static $register_form_path = 'pages/employees/register';
 
 
     public function showSearch() {

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\View;
 
 Route::any('/', function(){
     $data['page_title'] = 'Home Page';
-    return View::make('components/dashboard/index', $data);
+    return View::make('pages/dashboard/index', $data);
 });
 
 Route::get('/employees', [EmployeeController::class, 'showSearch'])->name('employees');
