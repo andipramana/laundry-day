@@ -20,7 +20,6 @@ class EmployeeController extends Controller {
     }
 
     public function register(Request $request) {
-        $data = $request->all();
         $data['employee_code'] = "00000";
         Employee::create($data);
 

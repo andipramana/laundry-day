@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,3 +20,9 @@ Route::get('/employees', [EmployeeController::class, 'showSearch'])->name('emplo
 Route::get('/employees/register', [EmployeeController::class, 'showRegister'])->name('employees');
 
 Route::post('/employees/register', [EmployeeController::class, 'register'])->name('employees');
+
+Route::get('/orders', [OrderController::class, 'showSearch'])->name('orders');
+
+Route::get('/orders/register', [OrderController::class, 'showRegister'])->name('orders');
+
+Route::post('/orders/register', [OrderController::class, 'register'])->name('orders');
