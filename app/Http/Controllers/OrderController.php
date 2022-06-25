@@ -23,7 +23,9 @@ class OrderController extends Controller
         $data = $request->all();
         $data['order_code'] = OrderController::generateOrderCode();
         $data['date'] = date('Y-m-d');
-        $data['status'] ='Registered';
+        $data['status'] = 'Registered';
+        $data['cost'] = OrderController::calculateCost($data);
+
         Order::create($data);
 
         return redirect()->route('orders');
@@ -51,5 +53,13 @@ class OrderController extends Controller
         }
 
         return $order_code;
+    }
+
+    private function calculateCost(Array $data) {
+        if($data['laundry_type'] == 'regular') {
+            return $data['weight'] * 6000;
+        } else {
+            return $data['weight'] * 8000;
+        }
     }
 }
