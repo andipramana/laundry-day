@@ -35,11 +35,11 @@ class OrderController extends Controller
         $todays_order = Order::where('date', $current_date)->count();
 
         if ($todays_order < 10) {
-            $order_code = '000'.strval($current_date).strval($todays_order);
+            $order_code = strval($current_date).'000'.strval($todays_order);
         } else if ($todays_order < 100) {
-            $order_code = '00'.strval($current_date).strval($todays_order);
+            $order_code = strval($current_date).'00'.strval($todays_order);
         } else if ($todays_order < 1000) {
-            $order_code = '0'.strval($current_date).strval($todays_order);
+            $order_code = strval($current_date).'0'.strval($todays_order);
         } else {
             $order_code = strval($current_date).strval($todays_order);
         }
