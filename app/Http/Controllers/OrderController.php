@@ -43,21 +43,25 @@ class OrderController extends Controller
         $thisWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw("DAY(created_at) as date"))
         ->whereRaw('created_at > current_date - interval 6 Day')
         ->groupBy(DB::raw("DAY(created_at)"))
+        ->orderBy('created_at')
         ->pluck('count', 'date');
 
         $lastWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw("DAY(created_at) as date"))
         ->whereRaw('created_at between current_date - interval 13 day and current_date - interval 6 day')
         ->groupBy(DB::raw("DAY(created_at)"))
+        ->orderBy('created_at')
         ->pluck('count', 'date');
 
         $thisYear = Order::select(DB::raw("SUM(cost) as cost"), DB::raw("MONTHNAME(created_at) as month_name"))
         ->whereYear('created_at', date('Y'))
         ->groupBy(DB::raw("MONTHNAME(created_at)"))
+        ->orderBy('created_at')
         ->pluck('cost', 'month_name');
 
         $lastYear = Order::select(DB::raw("SUM(cost) as cost"), DB::raw("MONTHNAME(created_at) as month_name"))
         ->whereYear('created_at', date('Y') - 1)
         ->groupBy(DB::raw("MONTHNAME(created_at)"))
+        ->orderBy('created_at')
         ->pluck('cost', 'month_name');
 
         $totalOrderThisWeek = OrderController::sumTotalOrder($thisWeek);
