@@ -6,8 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
 Route::any('/', function(){
-    $data['page_title'] = 'Home Page';
-    return View::make('pages/dashboard/index', $data);
+    return View::make('pages/dashboard/index');
 });
 
 Route::get('/employees', [EmployeeController::class, 'showSearch'])->name('employees');
@@ -23,3 +22,5 @@ Route::get('/orders/register', [OrderController::class, 'showRegister'])->name('
 Route::post('/orders/register', [OrderController::class, 'register'])->name('ordersRegister');
 
 Route::get('/orders/process', [OrderController::class, 'process'])->name('ordersProcess');
+
+Route::get('/orders/finddata', [OrderController::class, 'finddata'])->name('ordersFindData');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -39,21 +40,55 @@ class OrderController extends Controller
     }
 
     public function findData(Request $request) {
-        if($request->timeframe == 'weekly') {
-            $data = Order::select(DB::raw("COUNT(*) as count"), DB::raw("DATE(created_at) as date"))
-            ->whereRaw('created_at > current_date - interval 6 Day')
-            ->groupBy(DB::raw("DATE(created_at)"))
-            ->pluck('count', 'date');
+        $thisWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw("DAY(created_at) as date"))
+        ->whereRaw('created_at > current_date - interval 6 Day')
+        ->groupBy(DB::raw("DAY(created_at)"))
+        ->pluck('count', 'date');
 
-            return $data;
-        } else {
-            $data = Order::select(DB::raw("SUM(cost) as cost"), DB::raw("MONTHNAME(created_at) as month_name"))
-            ->whereYear('created_at', date('Y'))
-            ->groupBy(DB::raw("MONTHNAME(created_at)"))
-            ->pluck('cost', 'month_name');
+        $lastWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw("DAY(created_at) as date"))
+        ->whereRaw('created_at between current_date - interval 13 day and current_date - interval 6 day')
+        ->groupBy(DB::raw("DAY(created_at)"))
+        ->pluck('count', 'date');
 
-            return $data;
+        $thisYear = Order::select(DB::raw("SUM(cost) as cost"), DB::raw("MONTHNAME(created_at) as month_name"))
+        ->whereYear('created_at', date('Y'))
+        ->groupBy(DB::raw("MONTHNAME(created_at)"))
+        ->pluck('cost', 'month_name');
+
+        $lastYear = Order::select(DB::raw("SUM(cost) as cost"), DB::raw("MONTHNAME(created_at) as month_name"))
+        ->whereYear('created_at', date('Y') - 1)
+        ->groupBy(DB::raw("MONTHNAME(created_at)"))
+        ->pluck('cost', 'month_name');
+
+        $totalOrderThisWeek = OrderController::sumTotalOrder($thisWeek);
+        $totalOrderLastWeek = OrderController::sumTotalOrder($lastWeek);;
+        $growthThisWeek = ($totalOrderThisWeek - $totalOrderLastWeek) / $totalOrderLastWeek * 100;
+
+        $totalOrderThisYear = OrderController::sumTotalOrder($thisYear);
+        $totalOrderLastYear = OrderController::sumTotalOrder($lastYear);
+        $growthThisYear = ($totalOrderThisYear - $totalOrderLastYear) / $totalOrderLastYear * 100;
+
+        return [
+            'thisWeek' => ['keys' => $thisWeek->keys(), 'values' => $thisWeek->values()],
+            'lastWeek' => ['keys' => $lastWeek->keys(), 'values' => $lastWeek->values()],
+            'thisYear' => ['keys' => $thisYear->keys(), 'values' => $thisYear->values()],
+            'lastYear' => ['keys' => $lastYear->keys(), 'values' => $lastYear->values()],
+            'totalOrderThisWeek' => $totalOrderThisWeek,
+            'totalOrderLastWeek' => $totalOrderLastWeek,
+            'growthThisWeek' =>  number_format($growthThisWeek, 2),
+            'totalOrderThisYear' => $totalOrderThisYear,
+            'totalOrderLastYear' => $totalOrderLastYear,
+            'growthThisYear' =>  number_format($growthThisYear, 2)
+        ];
+    }
+
+    private function sumTotalOrder(Collection $order) {
+        $total = 0;
+        foreach ($order as $value) {
+            $total += (float) $value;
         }
+
+        return $total;
     }
 
     private function generateOrderCode() {

@@ -7,12 +7,13 @@
     <div class="card-body">
         <div class="d-flex">
             <p class="d-flex flex-column">
-                <span class="text-bold text-lg">820</span>
+                <span class="text-bold text-lg" id="totalOrderThisWeek"></span>
                 <span>Total Order</span>
             </p>
             <p class="ml-auto d-flex flex-column text-right">
-                <span class="text-success">
-                    <i class="fas fa-arrow-up"></i> 12.5%
+                <span class="text-success" id="growthThisWeekColor">
+                    <i class="fas fa-arrow-up" id="growthThisWeekIcon"></i>
+                    <span id="growthThisWeek"></span>
                 </span>
                 <span class="text-muted">Since last week</span>
             </p>
