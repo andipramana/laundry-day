@@ -38,8 +38,8 @@
                         <tbody>
                             @foreach ($data as $row)
                                 <tr>
-                                    <th>{{ $row->name }}</th>
                                     <th>{{ $row->employee_code }}</th>
+                                    <th>{{ $row->name }}</th>
                                     <th>{{ $row->gender }}</th>
                                     <th>{{ $row->phone_no }}</th>
                                 </tr>

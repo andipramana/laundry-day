@@ -16,7 +16,7 @@
                         </div>
                         <div class="form-group">
                             <label for="phoneNo">Phone No</label>
-                            <input type="text" class="form-control" id="phone_no" name="phone_no" placeholder="Input phone no...">
+                            <input type="number" class="form-control" id="phone_no" name="phone_no" placeholder="Input phone no...">
                         </div>
                         <div class="form-group">
                             <label for="gender">Gender</label>
