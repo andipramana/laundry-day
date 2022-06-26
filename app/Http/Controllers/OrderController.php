@@ -65,12 +65,18 @@ class OrderController extends Controller
         ->pluck('cost', 'month_name');
 
         $totalOrderThisWeek = OrderController::sumTotalOrder($thisWeek);
-        $totalOrderLastWeek = OrderController::sumTotalOrder($lastWeek);;
-        $growthThisWeek = ($totalOrderThisWeek - $totalOrderLastWeek) / $totalOrderLastWeek * 100;
+        $totalOrderLastWeek = OrderController::sumTotalOrder($lastWeek);
+        $growthThisWeek = 0;
+        if ($totalOrderLastWeek > 0) {
+            $growthThisWeek = ($totalOrderThisWeek - $totalOrderLastWeek) / $totalOrderLastWeek * 100;
+        }
 
         $totalOrderThisYear = OrderController::sumTotalOrder($thisYear);
         $totalOrderLastYear = OrderController::sumTotalOrder($lastYear);
-        $growthThisYear = ($totalOrderThisYear - $totalOrderLastYear) / $totalOrderLastYear * 100;
+        $growthThisYear = 0;
+        if ($totalOrderLastYear > 0) {
+            $growthThisYear = ($totalOrderThisYear - $totalOrderLastYear) / $totalOrderLastYear * 100;
+        }
 
         return [
             'thisWeek' => ['keys' => $thisWeek->keys(), 'values' => $thisWeek->values()],
