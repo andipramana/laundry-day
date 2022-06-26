@@ -24,3 +24,5 @@ Route::post('/orders/register', [OrderController::class, 'register'])->name('ord
 Route::get('/orders/process', [OrderController::class, 'process'])->name('ordersProcess');
 
 Route::get('/orders/finddata', [OrderController::class, 'finddata'])->name('ordersFindData');
+
+Route::get('/orders/createdummy', [OrderController::class, 'createDummy'])->name('ordersCreateDummy');

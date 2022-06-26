@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -37,6 +38,31 @@ class OrderController extends Controller
         Order::where('order_code', $request->code)->update(['status' => $request->status]);
 
         return redirect()->route('orders');
+    }
+
+    public function createDummy() {
+        $begin = new DateTime( "2022-03-24" );
+        $end = new DateTime( "2022-06-26" );
+
+        for($i = $begin; $i <= $end; $i->modify('+1 day')){
+            $repeatation = rand(1, 20);
+            for ($j=0; $j < $repeatation; $j++) {
+                $data['weight'] = rand(1, 15);
+                $data['laundry_type'] = rand(1, 2) == 1 ? "regular" : "priority";
+                $data['created_at'] = $i;
+
+                $data['order_code'] = OrderController::generateOrderCode();
+                $data['date'] = date('Y-m-d');
+                $data['status'] = 'Registered';
+                $data['cost'] = OrderController::calculateCost($data);
+
+                $data['customer_name'] = (rand(1, 2) == 1 ? "Jhon Doe " : "Jane Doe ").$data['order_code'];
+                $data['customer_phone_no'] = 123456789;
+                $data['customer_gender'] = rand(1, 2) == 1 ? "Male" : "Female";
+
+                Order::create($data);
+            }
+        }
     }
 
     public function findData() {
