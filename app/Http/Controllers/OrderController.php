@@ -47,7 +47,7 @@ class OrderController extends Controller
         ->pluck('count', 'date');
 
         $lastWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw("DAY(created_at) as date"))
-        ->whereRaw('created_at between current_date - interval 13 day and current_date - interval 6 day')
+        ->whereRaw('created_at between current_date - interval 13 day and current_date - interval 7 day')
         ->groupBy(DB::raw("DAY(created_at)"))
         ->orderBy('created_at')
         ->pluck('count', 'date');
@@ -59,7 +59,7 @@ class OrderController extends Controller
         ->pluck('cost', 'month_name');
 
         $lastYear = Order::select(DB::raw("SUM(cost) as cost"), DB::raw("MONTHNAME(created_at) as month_name"))
-        ->whereYear('created_at', date('Y') - 1)
+        ->whereRaw('created_at <= current_date() - interval 1 Year ')
         ->groupBy(DB::raw("MONTHNAME(created_at)"))
         ->orderBy('created_at')
         ->pluck('cost', 'month_name');
