@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -35,6 +36,24 @@ class OrderController extends Controller
         Order::where('order_code', $request->code)->update(['status' => $request->status]);
 
         return redirect()->route('orders');
+    }
+
+    public function findData(Request $request) {
+        if($request->timeframe == 'weekly') {
+            $data = Order::select(DB::raw("COUNT(*) as count"), DB::raw("DATE(created_at) as date"))
+            ->whereRaw('created_at > current_date - interval 6 Day')
+            ->groupBy(DB::raw("DATE(created_at)"))
+            ->pluck('count', 'date');
+
+            return $data;
+        } else {
+            $data = Order::select(DB::raw("SUM(cost) as cost"), DB::raw("MONTHNAME(created_at) as month_name"))
+            ->whereYear('created_at', date('Y'))
+            ->groupBy(DB::raw("MONTHNAME(created_at)"))
+            ->pluck('cost', 'month_name');
+
+            return $data;
+        }
     }
 
     private function generateOrderCode() {
