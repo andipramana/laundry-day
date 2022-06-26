@@ -87,7 +87,7 @@ $(function () {
     async function loadChart() {
         await getOrderData();
 
-        $("#totalOrderThisWeek").html(formatter.format(totalOrderThisWeek));
+        $("#totalOrderThisWeek").html(totalOrderThisWeek);
         setGrowthThisWeek(growthThisWeek);
 
         $("#totalOrderThisYear").html(formatter.format(totalOrderThisYear));
