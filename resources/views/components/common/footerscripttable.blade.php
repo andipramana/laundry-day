@@ -30,6 +30,7 @@
             info: true,
             autoWidth: false,
             responsive: true,
+            order: [],
         });
     });
 </script>

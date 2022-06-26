@@ -13,7 +13,7 @@ class OrderController extends Controller
     private static $register_form_path = 'pages/orders/register';
 
     public function showSearch() {
-        $data = Order::all();
+        $data = Order::all()->sortByDesc('updated_at');
         return view(OrderController::$search_path, compact('data'));
     }
 
@@ -39,7 +39,7 @@ class OrderController extends Controller
         return redirect()->route('orders');
     }
 
-    public function findData(Request $request) {
+    public function findData() {
         $thisWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw("DAY(created_at) as date"))
         ->whereRaw('created_at > current_date - interval 6 Day')
         ->groupBy(DB::raw("DAY(created_at)"))
