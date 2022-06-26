@@ -12,7 +12,7 @@
             </p>
             <p class="ml-auto d-flex flex-column text-right">
                 <span class="text-success" id="growthThisYearColor">
-                    <i class="fas fa-arrow-up" id="growthThisIcon"></i>
+                    <i class="fas fa-arrow-up" id="growthThisYearIcon"></i>
                     <span id="growthThisYear"></span>
                 </span>
                 <span class="text-muted">Since last month</span>
