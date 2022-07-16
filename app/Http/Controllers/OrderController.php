@@ -12,9 +12,28 @@ class OrderController extends Controller
     private static $search_path = 'pages/orders/search';
     private static $register_form_path = 'pages/orders/register';
 
-    public function showSearch() {
-        $data = Order::all()->sortByDesc('updated_at')->take(100);
-        return view(OrderController::$search_path, compact('data'));
+    public function showSearch(Request $request) {
+        $keywords = $request->input('keywords');
+        $data = null;
+
+        if ($keywords == null) {
+            $data = Order::all()->sortByDesc('updated_at')->take(100);
+        } else {
+            $data = Order::where('order_code', 'like', '%' .$keywords. '%')
+            ->orWhere('created_at', 'like', '%' .$keywords. '%')
+            ->orWhere('weight', 'like', '%' .$keywords. '%')
+            ->orWhere('laundry_type', 'like', '%' .$keywords. '%')
+            ->orWhere('customer_name', 'like', '%' .$keywords. '%')
+            ->orWhere('customer_phone_no', 'like', '%' .$keywords. '%')
+            ->orWhere('customer_gender', $keywords)
+            ->orWhere('cost', 'like', '%' .$keywords. '%')
+            ->orWhere('status', $keywords)
+            ->get()
+            ->sortByDesc('updated_at')
+            ->take(100);
+        }
+
+        return view(OrderController::$search_path, compact('data', 'keywords'));
     }
 
     public function showRegister() {
