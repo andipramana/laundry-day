@@ -27,7 +27,6 @@ class OrderController extends Controller
             $driver = config("database.connections.{$connection}.driver");
             if($driver == 'pgsql') {
                 $wild_card = 'ilike';
-                $keywords_wild_car = "'%" .$keywords. "%'";
             }
 
             $data = Order::where('order_code', $wild_card, $keywords_wild_car)
