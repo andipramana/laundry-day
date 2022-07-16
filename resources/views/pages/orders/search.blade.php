@@ -13,7 +13,7 @@
             <a href="/orders/register" class="btn btn-primary">Add Order</a>
         </div>
         <div class="col-3">
-            <form class="d-flex" role="search" action="searchorder">
+            <form class="d-flex" role="search" action="orders">
                 <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search">
                 <button class="btn btn-primary" type="submit">Search</button>
             </form>
