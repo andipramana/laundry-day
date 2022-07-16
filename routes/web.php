@@ -15,6 +15,12 @@ Route::get('/employees/register', [EmployeeController::class, 'showRegister'])->
 
 Route::post('/employees/register', [EmployeeController::class, 'register'])->name('employeesRegister');
 
+Route::get('/employees/modify/{id}', [EmployeeController::class, 'showModify'])->name('employeesShowModify');
+
+Route::post('/employees/modify', [EmployeeController::class, 'modify'])->name('employeesModify');
+
+Route::get('/employees/delete/{id}', [EmployeeController::class, 'delete'])->name('employeesDelete');
+
 Route::get('/orders', [OrderController::class, 'showSearch'])->name('orders');
 
 Route::get('/orders/register', [OrderController::class, 'showRegister'])->name('ordersShowRegister');

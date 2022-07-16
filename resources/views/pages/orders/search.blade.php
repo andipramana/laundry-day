@@ -13,8 +13,8 @@
             <a href="/orders/register" class="btn btn-primary">Add Order</a>
         </div>
         <div class="col-3">
-            <form class="d-flex" role="search" action="searchorder">
-                <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search">
+            <form class="d-flex" role="search" action="orders">
+                <input class="form-control me-2" type="search" value="{{ $keywords }}" name="keywords" placeholder="Search" aria-label="Search">
                 <button class="btn btn-primary" type="submit">Search</button>
             </form>
         </div>
@@ -46,7 +46,7 @@
                             @foreach ($data as $row)
                                 <tr>
                                     <th>{{ $row->order_code }}</th>
-                                    <th>{{ $row->date }}</th>
+                                    <th>{{ $row->created_at }}</th>
                                     <th>{{ $row->weight }}</th>
                                     <th>{{ $row->laundry_type }}</th>
                                     <th>{{ $row->customer_name }}</th>

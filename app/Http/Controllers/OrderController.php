@@ -13,9 +13,28 @@ class OrderController extends Controller
     private static $search_path = 'pages/orders/search';
     private static $register_form_path = 'pages/orders/register';
 
-    public function showSearch() {
-        $data = Order::all()->sortByDesc('updated_at');
-        return view(OrderController::$search_path, compact('data'));
+    public function showSearch(Request $request) {
+        $keywords = $request->input('keywords');
+        $data = null;
+
+        if ($keywords == null) {
+            $data = Order::all()->sortByDesc('updated_at')->take(100);
+        } else {
+            $data = Order::where('order_code', 'like', '%' .$keywords. '%')
+            ->orWhere('created_at', 'like', '%' .$keywords. '%')
+            ->orWhere('weight', 'like', '%' .$keywords. '%')
+            ->orWhere('laundry_type', 'like', '%' .$keywords. '%')
+            ->orWhere('customer_name', 'like', '%' .$keywords. '%')
+            ->orWhere('customer_phone_no', 'like', '%' .$keywords. '%')
+            ->orWhere('customer_gender', $keywords)
+            ->orWhere('cost', 'like', '%' .$keywords. '%')
+            ->orWhere('status', $keywords)
+            ->get()
+            ->sortByDesc('updated_at')
+            ->take(100);
+        }
+
+        return view(OrderController::$search_path, compact('data', 'keywords'));
     }
 
     public function showRegister() {
@@ -66,28 +85,48 @@ class OrderController extends Controller
     }
 
     public function findData() {
-        $thisWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw("DAY(created_at) as date"))
-        ->whereRaw('created_at > current_date - interval 6 Day')
-        ->groupBy(DB::raw("DAY(created_at)"))
-        ->orderBy('created_at')
+        $query_date = "DAY(created_at)";
+        $query_month = "MONTHNAME(created_at)";
+        $query_month_group = $query_month;
+        $query_interval_6_day = "6 Day";
+        $query_interval_13_day = "13 Day";
+        $query_interval_7_day = "7 Day";
+        $query_interval_1_year = "1 Year";
+
+        $connection = config('database.default');
+        $driver = config("database.connections.{$connection}.driver");
+        if($driver == 'pgsql') {
+            $query_date = "created_at::date";
+            $query_month = "TO_CHAR(created_at, 'Month')";
+            $query_month_group = $query_month.", TO_CHAR(created_at, 'MM')";
+            $query_interval_6_day = "'6 days'";
+            $query_interval_13_day = "'13 days'";
+            $query_interval_7_day = "'7 days'";
+            $query_interval_1_year = "'1 Year'";
+        }
+
+        $thisWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw($query_date." as date"))
+        ->whereRaw("created_at > current_date - interval ".$query_interval_6_day)
+        ->groupBy(DB::raw($query_date))
+        ->orderBy(DB::raw($query_date))
         ->pluck('count', 'date');
 
-        $lastWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw("DAY(created_at) as date"))
-        ->whereRaw('created_at between current_date - interval 13 day and current_date - interval 6 day')
-        ->groupBy(DB::raw("DAY(created_at)"))
-        ->orderBy('created_at')
+        $lastWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw($query_date." as date"))
+        ->whereRaw("created_at between current_date - interval ".$query_interval_13_day." and current_date - interval ".$query_interval_7_day)
+        ->groupBy(DB::raw($query_date))
+        ->orderBy(DB::raw($query_date))
         ->pluck('count', 'date');
 
-        $thisYear = Order::select(DB::raw("SUM(cost) as cost"), DB::raw("MONTHNAME(created_at) as month_name"))
+        $thisYear = Order::select(DB::raw("SUM(cost) as cost"), DB::raw($query_month." as month_name"))
         ->whereYear('created_at', date('Y'))
-        ->groupBy(DB::raw("MONTHNAME(created_at)"))
-        ->orderBy('created_at')
+        ->groupBy(DB::raw($query_month_group))
+        ->orderBy(DB::raw($query_month_group))
         ->pluck('cost', 'month_name');
 
-        $lastYear = Order::select(DB::raw("SUM(cost) as cost"), DB::raw("MONTHNAME(created_at) as month_name"))
-        ->whereYear('created_at', date('Y') - 1)
-        ->groupBy(DB::raw("MONTHNAME(created_at)"))
-        ->orderBy('created_at')
+        $lastYear = Order::select(DB::raw("SUM(cost) as cost"), DB::raw($query_month." as month_name"))
+        ->whereRaw("created_at <= current_date - interval ".$query_interval_1_year)
+        ->groupBy(DB::raw($query_month_group))
+        ->orderBy(DB::raw($query_month_group))
         ->pluck('cost', 'month_name');
 
         $totalOrderThisWeek = OrderController::sumTotalOrder($thisWeek);
