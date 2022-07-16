@@ -9,10 +9,10 @@
 @endsection
 @section('container')
     <div class="row mt-5 mb-3">
-        <div class="col-3">
+        <div class="col-md-3">
             <a href="/employees/register" class="btn btn-primary">Add Employee</a>
         </div>
-        <div class="col-3">
+        <div class="col-md-3">
             <form class="d-flex" role="search" action="employees">
                 <input class="form-control me-2" value="{{ $keywords }}" type="search" name="keywords" placeholder="Search" aria-label="Search">
                 <button class="btn btn-primary" type="submit">Search</button>
