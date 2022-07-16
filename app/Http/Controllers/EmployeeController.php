@@ -17,19 +17,20 @@ class EmployeeController extends Controller {
         if ($keywords == null) {
             $data = Employee::all();
         } else {
-            $wild_card = "%" .$keywords. "%";
+            $keywords_wild_car = "%" .$keywords. "%";
+            $wild_card = 'like';
 
             $connection = config('database.default');
             $driver = config("database.connections.{$connection}.driver");
             if($driver == 'pgsql') {
-                $wild_card = "'%" .$keywords. "%'";
-                $keywords = "'".$keywords."'";
+                $wild_card = 'ilike';
+                $keywords_wild_car = "'%" .$keywords. "%'";
             }
 
-            $data = Employee::where('name', 'like', $wild_card)
-            ->orWhere('phone_no', 'like', $wild_card)
-            ->orWhere('employee_code', 'like', $wild_card)
-            ->orWhere('gender', $keywords)
+            $data = Employee::where('name', $wild_card, $keywords_wild_car)
+            ->orWhere('phone_no', $wild_card, $keywords_wild_car)
+            ->orWhere('employee_code', $wild_card, $keywords_wild_car)
+            ->orWhere('gender', $wild_card, $keywords_wild_car)
             ->get();
         }
 

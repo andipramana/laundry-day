@@ -20,24 +20,25 @@ class OrderController extends Controller
         if ($keywords == null) {
             $data = Order::all()->sortByDesc('updated_at')->take(100);
         } else {
-            $wild_card = "%" .$keywords. "%";
+            $keywords_wild_car = "%" .$keywords. "%";
+            $wild_card = 'like';
 
             $connection = config('database.default');
             $driver = config("database.connections.{$connection}.driver");
             if($driver == 'pgsql') {
-                $wild_card = "'%" .$keywords. "%'";
-                $keywords = "'".$keywords."'";
+                $wild_card = 'ilike';
+                $keywords_wild_car = "'%" .$keywords. "%'";
             }
 
-            $data = Order::where('order_code', 'like', $wild_card)
-            ->orWhere('created_at', 'like', $wild_card)
-            ->orWhere('weight', 'like', $wild_card)
-            ->orWhere('laundry_type', 'like', $wild_card)
-            ->orWhere('customer_name', 'like', $wild_card)
-            ->orWhere('customer_phone_no', 'like', $wild_card)
-            ->orWhere('customer_gender', $keywords)
-            ->orWhere('cost', 'like', $wild_card)
-            ->orWhere('status', $keywords)
+            $data = Order::where('order_code', $wild_card, $keywords_wild_car)
+            ->orWhere('created_at', $wild_card, $keywords_wild_car)
+            ->orWhere('weight', $wild_card, $keywords_wild_car)
+            ->orWhere('laundry_type', $wild_card, $keywords_wild_car)
+            ->orWhere('customer_name', $wild_card, $keywords_wild_car)
+            ->orWhere('customer_phone_no', $wild_card, $keywords_wild_car)
+            ->orWhere('customer_gender', $wild_card, $keywords_wild_car)
+            ->orWhere('cost', $wild_card, $keywords_wild_car)
+            ->orWhere('status', $wild_card, $keywords_wild_car)
             ->get()
             ->sortByDesc('updated_at')
             ->take(100);
