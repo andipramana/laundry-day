@@ -20,14 +20,23 @@ class OrderController extends Controller
         if ($keywords == null) {
             $data = Order::all()->sortByDesc('updated_at')->take(100);
         } else {
-            $data = Order::where('order_code', 'like', '%' .$keywords. '%')
-            ->orWhere('created_at', 'like', '%' .$keywords. '%')
-            ->orWhere('weight', 'like', '%' .$keywords. '%')
-            ->orWhere('laundry_type', 'like', '%' .$keywords. '%')
-            ->orWhere('customer_name', 'like', '%' .$keywords. '%')
-            ->orWhere('customer_phone_no', 'like', '%' .$keywords. '%')
+            $wild_card = "%" .$keywords. "%";
+
+            $connection = config('database.default');
+            $driver = config("database.connections.{$connection}.driver");
+            if($driver == 'pgsql') {
+                $wild_card = "'%" .$keywords. "%'";
+                $keywords = "'".$keywords."'";
+            }
+
+            $data = Order::where('order_code', 'like', $wild_card)
+            ->orWhere('created_at', 'like', $wild_card)
+            ->orWhere('weight', 'like', $wild_card)
+            ->orWhere('laundry_type', 'like', $wild_card)
+            ->orWhere('customer_name', 'like', $wild_card)
+            ->orWhere('customer_phone_no', 'like', $wild_card)
             ->orWhere('customer_gender', $keywords)
-            ->orWhere('cost', 'like', '%' .$keywords. '%')
+            ->orWhere('cost', 'like', $wild_card)
             ->orWhere('status', $keywords)
             ->get()
             ->sortByDesc('updated_at')
@@ -84,7 +93,7 @@ class OrderController extends Controller
 
                 $data['customer_name'] = (rand(1, 2) == 1 ? "Jhon Doe " : "Jane Doe ").$data['order_code'];
                 $data['customer_phone_no'] = 123456789;
-                $data['customer_gender'] = rand(1, 2) == 1 ? "male" : "female";
+                $data['customer_gender'] =  $data['customer_name'] == "Jhon Doe " ? "male" : "female";
 
                 Order::create($data);
                 array_push($data_list, $data);
