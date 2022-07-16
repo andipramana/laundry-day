@@ -84,7 +84,7 @@ class OrderController extends Controller
 
                 $data['customer_name'] = (rand(1, 2) == 1 ? "Jhon Doe " : "Jane Doe ").$data['order_code'];
                 $data['customer_phone_no'] = 123456789;
-                $data['customer_gender'] = rand(1, 2) == 1 ? "Male" : "Female";
+                $data['customer_gender'] = rand(1, 2) == 1 ? "male" : "female";
 
                 Order::create($data);
                 array_push($data_list, $data);
