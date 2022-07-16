@@ -59,14 +59,20 @@ class OrderController extends Controller
         return redirect()->route('orders');
     }
 
-    public function createDummy() {
-        $begin = new DateTime( "2022-03-24" );
-        $end = new DateTime( "2022-06-26" );
+    public function createDummy(Request $request) {
+        $start_date = $request->input('startDate');
+        $end_date = $request->input('endDate');
+        $max_per_day = $request->input('maxOrder');
+        $max_per_day = $max_per_day == null || $max_per_day > 10 ? 10 : $max_per_day;
+        $max_weight = $request->input('maxWeight');
+        $max_weight = $max_weight == null || $max_weight > 15 ? 15 : $max_weight;
+        $begin = new DateTime($start_date);
+        $end = new DateTime($end_date);
 
         for($i = $begin; $i <= $end; $i->modify('+1 day')){
-            $repeatation = rand(1, 20);
+            $repeatation = rand(1, $max_per_day);
             for ($j=0; $j < $repeatation; $j++) {
-                $data['weight'] = rand(1, 15);
+                $data['weight'] = rand(1, $max_weight);
                 $data['laundry_type'] = rand(1, 2) == 1 ? "regular" : "priority";
                 $data['created_at'] = $i;
 
