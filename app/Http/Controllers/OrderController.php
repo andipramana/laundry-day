@@ -52,7 +52,7 @@ class OrderController extends Controller
 
     public function register(Request $request) {
         $data = $request->all();
-        $data['order_code'] = OrderController::generateOrderCode();
+        $data['order_code'] = OrderController::generateOrderCode(null);
         $data['date'] = date('Y-m-d');
         $data['status'] = 'Registered';
         $data['cost'] = OrderController::calculateCost($data);
@@ -64,50 +64,6 @@ class OrderController extends Controller
 
     public function process(Request $request) {
         Order::where('order_code', $request->code)->update(['status' => $request->status]);
-
-        return redirect()->route('orders');
-    }
-
-    public function createDummy(Request $request) {
-        $start_date = $request->input('startDate');
-        $end_date = $request->input('endDate');
-        $max_per_day = $request->input('maxOrder');
-        $max_per_day = $max_per_day == null || $max_per_day > 5 ? 5 : $max_per_day;
-        $max_weight = $request->input('maxWeight');
-        $max_weight = $max_weight == null || $max_weight > 15 ? 15 : $max_weight;
-        $begin = new DateTime($start_date);
-        $end = new DateTime($end_date);
-        $data_list = [];
-
-        for($i = $begin; $i <= $end; $i->modify('+1 day')){
-            $repeatation = rand(1, $max_per_day);
-            for ($j=0; $j < $repeatation; $j++) {
-                $data['weight'] = rand(1, $max_weight);
-                $data['laundry_type'] = rand(1, 2) == 1 ? "regular" : "priority";
-                $data['created_at'] = $i;
-
-                $data['order_code'] = OrderController::generateOrderCode();
-                $data['date'] = $i;
-                $data['status'] = 'Registered';
-                $data['cost'] = OrderController::calculateCost($data);
-
-                $data['customer_name'] = (rand(1, 2) == 1 ? "Jhon Doe " : "Jane Doe ");
-                $data['customer_phone_no'] = 123456789;
-                $data['customer_gender'] =  $data['customer_name'] == "Jhon Doe " ? "male" : "female";
-
-                Order::create($data);
-                array_push($data_list, $data);
-            }
-        }
-
-        return [
-            'data_size' => count($data_list),
-            'data_list' => $data_list
-        ];
-    }
-
-    public function deleteAll() {
-        Order::whereNotNull('id')->delete();
 
         return redirect()->route('orders');
     }
@@ -194,19 +150,24 @@ class OrderController extends Controller
         return $total;
     }
 
-    private function generateOrderCode() {
+    private function generateOrderCode($date) {
         $order_code = '';
-        $current_date = date('Ymd');
-        $todays_order = Order::where('date', $current_date)->count();
+
+        if ($date == null) {
+            $date = date('Ymd');
+        }
+
+        $todays_order = Order::where('date', $date)->count();
+        $todays_order += 1;
 
         if ($todays_order < 10) {
-            $order_code = strval($current_date).'000'.strval($todays_order);
+            $order_code = strval($date).'000'.strval($todays_order);
         } else if ($todays_order < 100) {
-            $order_code = strval($current_date).'00'.strval($todays_order);
+            $order_code = strval($date).'00'.strval($todays_order);
         } else if ($todays_order < 1000) {
-            $order_code = strval($current_date).'0'.strval($todays_order);
+            $order_code = strval($date).'0'.strval($todays_order);
         } else {
-            $order_code = strval($current_date).strval($todays_order);
+            $order_code = strval($date).strval($todays_order);
         }
 
         return $order_code;
@@ -218,5 +179,49 @@ class OrderController extends Controller
         } else {
             return $data['weight'] * 8000;
         }
+    }
+
+    public function createDummy(Request $request) {
+        $start_date = $request->input('startDate');
+        $end_date = $request->input('endDate');
+        $max_per_day = $request->input('maxOrder');
+        $max_per_day = $max_per_day == null || $max_per_day > 5 ? 5 : $max_per_day;
+        $max_weight = $request->input('maxWeight');
+        $max_weight = $max_weight == null || $max_weight > 15 ? 15 : $max_weight;
+        $begin = new DateTime($start_date);
+        $end = new DateTime($end_date);
+        $data_list = [];
+
+        for($i = $begin; $i <= $end; $i->modify('+1 day')){
+            $repeatation = rand(1, $max_per_day);
+            for ($j=0; $j < $repeatation; $j++) {
+                $data['weight'] = rand(1, $max_weight);
+                $data['laundry_type'] = rand(1, 2) == 1 ? "regular" : "priority";
+                $data['created_at'] = $i;
+
+                $data['order_code'] = OrderController::generateOrderCode($i->format('Ymd'));
+                $data['date'] = $i->format('Y-m-d');
+                $data['status'] = 'Registered';
+                $data['cost'] = OrderController::calculateCost($data);
+
+                $data['customer_name'] = (rand(1, 2) == 1 ? "Jhon Doe " : "Jane Doe ");
+                $data['customer_phone_no'] = 123456789;
+                $data['customer_gender'] =  $data['customer_name'] == "Jhon Doe " ? "male" : "female";
+
+                Order::create($data);
+                array_push($data_list, $data);
+            }
+        }
+
+        return [
+            'data_size' => count($data_list),
+            'data_list' => $data_list
+        ];
+    }
+
+    public function deleteAll() {
+        Order::whereNotNull('id')->delete();
+
+        return redirect()->route('orders');
     }
 }
