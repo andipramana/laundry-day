@@ -91,7 +91,7 @@ class OrderController extends Controller
                 $data['status'] = 'Registered';
                 $data['cost'] = OrderController::calculateCost($data);
 
-                $data['customer_name'] = (rand(1, 2) == 1 ? "Jhon Doe " : "Jane Doe ").$data['order_code'];
+                $data['customer_name'] = (rand(1, 2) == 1 ? "Jhon Doe " : "Jane Doe ");
                 $data['customer_phone_no'] = 123456789;
                 $data['customer_gender'] =  $data['customer_name'] == "Jhon Doe " ? "male" : "female";
 
