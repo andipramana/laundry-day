@@ -13,7 +13,7 @@ class OrderController extends Controller
     private static $register_form_path = 'pages/orders/register';
 
     public function showSearch() {
-        $data = Order::all()->sortByDesc('updated_at');
+        $data = Order::all()->sortByDesc('updated_at')->take(100);
         return view(OrderController::$search_path, compact('data'));
     }
 
