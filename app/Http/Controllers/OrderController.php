@@ -40,27 +40,27 @@ class OrderController extends Controller
     }
 
     public function findData() {
-        $thisWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw("DAY(created_at) as date"))
-        ->whereRaw('created_at > current_date - interval 6 Day')
-        ->groupBy(DB::raw("DAY(created_at)"))
-        ->orderBy('created_at')
+        $thisWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw("created_at::date as date"))
+        ->whereRaw("created_at > current_date - interval '6 days'")
+        ->groupBy(DB::raw("created_at::date"))
+        ->orderBy(DB::raw('created_at::date'))
         ->pluck('count', 'date');
 
-        $lastWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw("DAY(created_at) as date"))
-        ->whereRaw('created_at between current_date - interval 13 day and current_date - interval 7 day')
-        ->groupBy(DB::raw("DAY(created_at)"))
-        ->orderBy('created_at')
+        $lastWeek = Order::select(DB::raw("COUNT(*) as count"), DB::raw("created_at::date as date"))
+        ->whereRaw("created_at between current_date - interval '13 days' and current_date - interval '7 days'")
+        ->groupBy(DB::raw("created_at::date"))
+        ->orderBy(DB::raw('created_at::date'))
         ->pluck('count', 'date');
 
-        $thisYear = Order::select(DB::raw("SUM(cost) as cost"), DB::raw("MONTHNAME(created_at) as month_name"))
+        $thisYear = Order::select(DB::raw("SUM(cost) as cost"), DB::raw("TO_CHAR(created_at, 'Month') as month_name"))
         ->whereYear('created_at', date('Y'))
-        ->groupBy(DB::raw("MONTHNAME(created_at)"))
+        ->groupBy(DB::raw("TO_CHAR(created_at, 'Month')"))
         ->orderBy('created_at')
         ->pluck('cost', 'month_name');
 
-        $lastYear = Order::select(DB::raw("SUM(cost) as cost"), DB::raw("MONTHNAME(created_at) as month_name"))
-        ->whereRaw('created_at <= current_date() - interval 1 Year ')
-        ->groupBy(DB::raw("MONTHNAME(created_at)"))
+        $lastYear = Order::select(DB::raw("SUM(cost) as cost"), DB::raw("TO_CHAR(created_at, 'Month') as month_name"))
+        ->whereRaw("created_at <= current_date - interval '1 Year'")
+        ->groupBy(DB::raw("TO_CHAR(created_at, 'Month')"))
         ->orderBy('created_at')
         ->pluck('cost', 'month_name');
 
