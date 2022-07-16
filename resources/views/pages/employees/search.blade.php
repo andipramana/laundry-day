@@ -14,7 +14,7 @@
         </div>
         <div class="col-3">
             <form class="d-flex" role="search" action="employees">
-                <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search">
+                <input class="form-control me-2" value="{{ $keywords }}" type="search" name="keywords" placeholder="Search" aria-label="Search">
                 <button class="btn btn-primary" type="submit">Search</button>
             </form>
         </div>
@@ -33,6 +33,7 @@
                                 <th scope="col">Name</th>
                                 <th scope="col">Gender</th>
                                 <th scope="col">Phone No</th>
+                                <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,6 +43,10 @@
                                     <th>{{ $row->name }}</th>
                                     <th>{{ $row->gender }}</th>
                                     <th>{{ $row->phone_no }}</th>
+                                    <th>
+                                        <a href="/employees/modify/{{ $row->id }}" class="btn btn-warning">Modify</a>
+                                        <a href="/employees/delete/{{ $row->id }}" class="btn btn-danger">Delete</a>
+                                    </th>
                                 </tr>
                             @endforeach
                         </tbody>
