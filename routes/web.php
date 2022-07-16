@@ -32,3 +32,5 @@ Route::get('/orders/process', [OrderController::class, 'process'])->name('orders
 Route::get('/orders/finddata', [OrderController::class, 'finddata'])->name('ordersFindData');
 
 Route::get('/orders/createdummy', [OrderController::class, 'createDummy'])->name('ordersCreateDummy');
+
+Route::get('/orders/deleteall', [OrderController::class, 'deleteAll'])->name('ordersDeleteAll');

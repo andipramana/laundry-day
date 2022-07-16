@@ -63,11 +63,12 @@ class OrderController extends Controller
         $start_date = $request->input('startDate');
         $end_date = $request->input('endDate');
         $max_per_day = $request->input('maxOrder');
-        $max_per_day = $max_per_day == null || $max_per_day > 10 ? 10 : $max_per_day;
+        $max_per_day = $max_per_day == null || $max_per_day > 5 ? 5 : $max_per_day;
         $max_weight = $request->input('maxWeight');
         $max_weight = $max_weight == null || $max_weight > 15 ? 15 : $max_weight;
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
+        $data_list = [];
 
         for($i = $begin; $i <= $end; $i->modify('+1 day')){
             $repeatation = rand(1, $max_per_day);
@@ -77,7 +78,7 @@ class OrderController extends Controller
                 $data['created_at'] = $i;
 
                 $data['order_code'] = OrderController::generateOrderCode();
-                $data['date'] = date('Y-m-d');
+                $data['date'] = $i;
                 $data['status'] = 'Registered';
                 $data['cost'] = OrderController::calculateCost($data);
 
@@ -86,8 +87,20 @@ class OrderController extends Controller
                 $data['customer_gender'] = rand(1, 2) == 1 ? "Male" : "Female";
 
                 Order::create($data);
+                array_push($data_list, $data);
             }
         }
+
+        return [
+            'data_size' => count($data_list),
+            'data_list' => $data_list
+        ];
+    }
+
+    public function deleteAll() {
+        Order::whereNotNull('id')->delete();
+
+        return redirect()->route('orders');
     }
 
     public function findData() {
